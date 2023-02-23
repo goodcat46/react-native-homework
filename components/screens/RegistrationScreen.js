@@ -1,28 +1,39 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TextInput, TouchableOpacity, StatusBar, KeyboardAvoidingView, Keyboard, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Button,
+  TextInput,
+  TouchableOpacity,
+  StatusBar,
+  KeyboardAvoidingView,
+  Keyboard,
+  Pressable,
+  TouchableWithoutFeedback,
+  Platform,
+} from 'react-native';
+import { screens } from './screens';
 import { Path, Svg } from 'react-native-svg';
 import ua from '../../lang';
-// import Svg, { Path } from 'react-native-svg';
 import { colors } from '../../styles';
+import BackgroundImage from './BackgroundImage';
+// import Svg, { Path } from 'react-native-svg';
 const initialState = {
   login: '',
   email: '',
   password: '',
 };
+
 const RegistrationScreen = ({ navigation }) => {
   const [formData, setFormData] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInputName, setActiveInputName] = useState(null);
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
 
-  function navigateToLogin() {
-    // navigation.navigate('Login');
-  }
-
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    // setState(initialState);
   };
 
   function onChangeFormData(name, text) {
@@ -45,11 +56,15 @@ const RegistrationScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={s.form}>
-      <StatusBar style="auto" />
-
-      <Pressable style={s.imgBox} onPress={ev => console.log(ev)}>
-        {/* <Svg
+    <BackgroundImage>
+      <TouchableWithoutFeedback onPress={keyboardHide}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : ''}
+          style={s.KAVWrapper}
+        >
+          <View style={{ ...s.form, marginBottom: isShowKeyboard ? -190 : 0 }}>
+            <Pressable style={s.imgBox} onPress={ev => console.log(ev)}>
+              {/* <Svg
             width="13"
             height="13"
             viewBox="0 0 32 32"
@@ -60,97 +75,124 @@ const RegistrationScreen = ({ navigation }) => {
           >
             <Path fill="currentColor" d="M17.231 0h-2.462v14.769h-14.769v2.462h14.769v14.769h2.462v-14.769h14.769v-2.462h-14.769v-14.769z" />
           </Svg> */}
-      </Pressable>
+            </Pressable>
 
-      <Text style={s.title}>{ua.registration}</Text>
+            <Text style={s.title}>{ua.registration}</Text>
 
-      <View style={s.inputs}>
-        <View>
-          <TextInput
-            style={{
-              ...s.input,
-              backgroundColor: activeInputName === 'login' ? colors.mainWhite : colors.notActiveInput,
-              borderColor: activeInputName === 'login' ? colors.brandOrange : colors.notActiveInputBrdClr,
-            }}
-            placeholder={ua.login}
-            name="login"
-            value={formData.login}
-            onChangeText={text => {
-              onChangeFormData('login', text);
-            }}
-            onFocus={() => {
-              setActiveInputName('login');
-            }}
-            onBlur={() => {
-              setActiveInputName(null);
-            }}
-          />
-        </View>
-        <View>
-          <TextInput
-            style={{
-              ...s.input,
-              backgroundColor: activeInputName === 'email' ? colors.mainWhite : colors.notActiveInput,
-              borderColor: activeInputName === 'email' ? colors.brandOrange : colors.notActiveInputBrdClr,
-            }}
-            placeholder={ua.email}
-            name="email"
-            value={formData.email}
-            onChangeText={text => {
-              onChangeFormData('email', text);
-            }}
-            onFocus={() => {
-              setActiveInputName('email');
-            }}
-            onBlur={() => {
-              setActiveInputName(null);
-            }}
-          />
-        </View>
-        <View>
-          <TextInput
-            style={{
-              ...s.input,
-              backgroundColor: activeInputName === 'password' ? colors.mainWhite : colors.notActiveInput,
-              borderColor: activeInputName === 'password' ? colors.brandOrange : colors.notActiveInputBrdClr,
-            }}
-            placeholder={ua.password}
-            name="password"
-            value={formData.password}
-            onChangeText={text => {
-              onChangeFormData('password', text);
-            }}
-            onFocus={() => {
-              setActiveInputName('password');
-            }}
-            onBlur={() => {
-              setActiveInputName(null);
-            }}
-          />{' '}
-        </View>
-      </View>
+            <View style={s.inputs}>
+              <View>
+                <TextInput
+                  style={{
+                    ...s.input,
+                    backgroundColor:
+                      activeInputName === 'login' ? colors.mainWhite : colors.notActiveInput,
+                    borderColor:
+                      activeInputName === 'login'
+                        ? colors.brandOrange
+                        : colors.notActiveInputBrdClr,
+                  }}
+                  placeholder={ua.login}
+                  name="login"
+                  value={formData.login}
+                  onChangeText={text => {
+                    onChangeFormData('login', text);
+                  }}
+                  onFocus={() => {
+                    setIsShowKeyboard(true);
+                    setActiveInputName('login');
+                  }}
+                  onBlur={() => {
+                    setIsShowKeyboard(false);
+                    setActiveInputName(null);
+                  }}
+                />
+              </View>
+              <View>
+                <TextInput
+                  style={{
+                    ...s.input,
+                    backgroundColor:
+                      activeInputName === 'email' ? colors.mainWhite : colors.notActiveInput,
+                    borderColor:
+                      activeInputName === 'email'
+                        ? colors.brandOrange
+                        : colors.notActiveInputBrdClr,
+                  }}
+                  placeholder={ua.email}
+                  name="email"
+                  value={formData.email}
+                  onChangeText={text => {
+                    onChangeFormData('email', text);
+                  }}
+                  onFocus={() => {
+                    setActiveInputName('email');
+                    setIsShowKeyboard(true);
+                  }}
+                  onBlur={() => {
+                    setActiveInputName(null);
+                    setIsShowKeyboard(false);
+                  }}
+                />
+              </View>
+              <View>
+                <TextInput
+                  style={{
+                    ...s.input,
+                    backgroundColor:
+                      activeInputName === 'password' ? colors.mainWhite : colors.notActiveInput,
+                    borderColor:
+                      activeInputName === 'password'
+                        ? colors.brandOrange
+                        : colors.notActiveInputBrdClr,
+                  }}
+                  placeholder={ua.password}
+                  name="password"
+                  value={formData.password}
+                  onChangeText={text => {
+                    onChangeFormData('password', text);
+                  }}
+                  onFocus={() => {
+                    setActiveInputName('password');
+                    setIsShowKeyboard(true);
+                  }}
+                  onBlur={() => {
+                    setActiveInputName(null);
+                    setIsShowKeyboard(false);
+                  }}
+                />
+              </View>
+            </View>
 
-      <Pressable style={s.btn} onPress={onSubmitForm}>
-        <Text style={s.btnText}>{ua.register}</Text>
-      </Pressable>
+            <Pressable style={s.btn} onPress={onSubmitForm}>
+              <Text style={s.btnText}>{ua.register}</Text>
+            </Pressable>
 
-      <View style={s.wrapper}>
-        <Text style={s.text}>{ua.allreadyRegistered}</Text>
-        <Text style={{ ...s.text, marginLeft: 10 }} onPress={navigateToLogin}>
-          {ua.goToLogin}
-        </Text>
-      </View>
-    </View>
+            <View style={s.wrapper}>
+              <Text style={s.text}>{ua.allreadyRegistered}</Text>
+              <Text
+                style={{ ...s.text, marginLeft: 10 }}
+                onPress={() => navigation.navigate(screens.login)}
+              >
+                {ua.goToLogin}
+              </Text>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </BackgroundImage>
   );
 };
 
 const s = StyleSheet.create({
+  KAVWrapper: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   form: {
     position: 'relative',
     // flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    gap: 4,
 
     backgroundColor: colors.mainWhite,
     borderTopLeftRadius: 25,
@@ -186,11 +228,9 @@ const s = StyleSheet.create({
     marginTop: 32,
   },
   input: {
-    // ...getBorderRadius(4),
     backgroundColor: colors.notActiveInput,
     borderRadius: 4,
     borderWidth: 1,
-    // borderColor: 'tomato',
     borderColor: colors.brandOrange,
     width: '100%',
     height: 50,

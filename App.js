@@ -1,21 +1,49 @@
 import { StatusBar } from 'expo-status-bar';
-import { ImageBackground, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { Provider } from 'react-redux';
+import Main from './components/Main';
 import LoginScreen from './components/screens/LoginScreen';
 import RegistrationScreen from './components/screens/RegistrationScreen';
 
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+import { store } from './redux/store';
+
 const App = () => {
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await Font.loadAsync({
+          'Roboto-Regular': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+          'Roboto-Medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+    prepare();
+  }, []);
+
   return (
     <>
-      <View style={s.app}>
-        <View style={s.container}>
-          <ImageBackground style={s.ImageBackground} source={require('./background.jpg')} resizeMode="cover">
+      <Provider store={store}>
+        <View style={s.app}>
+          <View style={s.container}>
             {/* <RegistrationScreen></RegistrationScreen> */}
-            <LoginScreen></LoginScreen>
-          </ImageBackground>
-        </View>
+            {/* <LoginScreen></LoginScreen> */}
 
-        <StatusBar style="auto" />
-      </View>
+            <Main />
+          </View>
+
+          <StatusBar style="auto" />
+        </View>
+      </Provider>
     </>
   );
 };
@@ -32,11 +60,6 @@ const s = StyleSheet.create({
     // justifyContent: 'flex-end',
     width: '100%',
     height: 50,
-  },
-  ImageBackground: {
-    flex: 1,
-    width: '100%',
-    justifyContent: 'flex-end',
   },
 });
 export default App;

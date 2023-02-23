@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { colors } from '../../styles';
-import ua from '../../lang';
 
 import {
   View,
@@ -15,15 +13,23 @@ import {
   ImageBackground,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { colors } from '../../styles';
+import ua from '../../lang';
+import { screens } from './screens';
+import BackgroundImage from './BackgroundImage';
+import { useDispatch } from 'react-redux';
+import { loginUserThunk } from '../../redux/auth/auth.thunks';
+
 const initialState = {
   login: '',
   password: '',
 };
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [formData, setFormData] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInputName, setActiveInputName] = useState(null);
+  const dispatch = useDispatch();
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -42,85 +48,111 @@ const LoginScreen = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
 
+    const payload = {
+      submitData: {
+        ...formData,
+      },
+    };
+
+    dispatch(loginUserThunk(payload));
+
     setFormData(initialState);
   }
 
-  function navigateToRegister() {}
-
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''} style={s.KAVWrapper}>
-        <View style={{ ...s.form, marginBottom: isShowKeyboard ? -241 : 0 }}>
-          <Text style={s.title}>{ua.loginForm}</Text>
+    <>
+      <BackgroundImage></BackgroundImage>
+      <TouchableWithoutFeedback onPress={keyboardHide}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : ''}
+          style={s.KAVWrapper}
+        >
+          <View style={{ ...s.form, marginBottom: isShowKeyboard ? -241 : 0 }}>
+            <Text style={s.title}>{ua.loginForm}</Text>
 
-          <View style={s.inputs}>
-            <View>
-              <TextInput
-                style={{
-                  ...s.input,
-                  backgroundColor: activeInputName === 'login' ? colors.mainWhite : colors.notActiveInput,
-                  borderColor: activeInputName === 'login' ? colors.brandOrange : colors.notActiveInputBrdClr,
-                }}
-                placeholder={ua.login}
-                name="login"
-                value={formData.login}
-                onChangeText={text => {
-                  onChangeFormData('login', text);
-                }}
-                onFocus={() => {
-                  setActiveInputName('login');
-                  setIsShowKeyboard(true);
-                }}
-                onBlur={() => {
-                  setActiveInputName(null);
-                  setIsShowKeyboard(false);
-                }}
-              />
+            <View style={s.inputs}>
+              <View>
+                <TextInput
+                  style={{
+                    ...s.input,
+                    backgroundColor:
+                      activeInputName === 'login' ? colors.mainWhite : colors.notActiveInput,
+                    borderColor:
+                      activeInputName === 'login'
+                        ? colors.brandOrange
+                        : colors.notActiveInputBrdClr,
+                  }}
+                  placeholder={ua.login}
+                  name="login"
+                  value={formData.login}
+                  onChangeText={text => {
+                    onChangeFormData('login', text);
+                  }}
+                  onFocus={() => {
+                    setActiveInputName('login');
+                    setIsShowKeyboard(true);
+                  }}
+                  onBlur={() => {
+                    setActiveInputName(null);
+                    setIsShowKeyboard(false);
+                  }}
+                />
+              </View>
+
+              <View>
+                <TextInput
+                  style={{
+                    ...s.input,
+                    backgroundColor:
+                      activeInputName === 'password' ? colors.mainWhite : colors.notActiveInput,
+                    borderColor:
+                      activeInputName === 'password'
+                        ? colors.brandOrange
+                        : colors.notActiveInputBrdClr,
+                  }}
+                  placeholder={ua.password}
+                  name="password"
+                  value={formData.password}
+                  onChangeText={text => {
+                    onChangeFormData('password', text);
+                  }}
+                  onFocus={() => {
+                    setActiveInputName('password');
+                    setIsShowKeyboard(true);
+                  }}
+                  onBlur={() => {
+                    setActiveInputName(null);
+                    setIsShowKeyboard(false);
+                  }}
+                />
+              </View>
             </View>
 
-            <View>
-              <TextInput
-                style={{
-                  ...s.input,
-                  backgroundColor: activeInputName === 'password' ? colors.mainWhite : colors.notActiveInput,
-                  borderColor: activeInputName === 'password' ? colors.brandOrange : colors.notActiveInputBrdClr,
-                }}
-                placeholder={ua.password}
-                name="password"
-                value={formData.password}
-                onChangeText={text => {
-                  onChangeFormData('password', text);
-                }}
-                onFocus={() => {
-                  setActiveInputName('password');
-                  setIsShowKeyboard(true);
-                }}
-                onBlur={() => {
-                  setActiveInputName(null);
-                  setIsShowKeyboard(false);
-                }}
-              />
+            <TouchableOpacity style={s.btn} onPress={onSubmitForm}>
+              <Text style={s.btnText}>{ua.enterBtn}</Text>
+            </TouchableOpacity>
+
+            <View style={s.wrapper}>
+              <Text style={s.text}>{ua.haveNotAccount}</Text>
+              <Text
+                style={{ ...s.text, marginLeft: 10 }}
+                onPress={() => navigation.navigate(screens.registration)}
+              >
+                {ua.goToRegistration}
+              </Text>
             </View>
           </View>
-
-          <TouchableOpacity style={s.btn} onPress={onSubmitForm}>
-            <Text style={s.btnText}>{ua.enterBtn}</Text>
-          </TouchableOpacity>
-
-          <View style={s.wrapper}>
-            <Text style={s.text}>{ua.haveNotAccount}</Text>
-            <Text style={{ ...s.text, marginLeft: 10 }} onPress={navigateToRegister}>
-              {ua.goToRegistration}
-            </Text>
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </>
   );
 };
 
 const s = StyleSheet.create({
-  KAVWrapper: {},
+  KAVWrapper: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   form: {
     position: 'relative',
     // flex: 1,
@@ -135,7 +167,7 @@ const s = StyleSheet.create({
     padding: 16,
     height: 575,
 
-    paddingBottom: 144,
+    // paddingBottom: 144,
   },
   title: {
     fontSize: 36,

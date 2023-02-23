@@ -1,24 +1,21 @@
-import React from "react";
+import React from 'react';
 
-import { StatusBar } from "expo-status-bar";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { SimpleLineIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { StyleSheet, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SimpleLineIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
+import { screens } from './screens/screens';
+import { AppScreens } from './screens';
 
-import { StyleSheet, View, Button, Pressable } from "react-native";
+import { colors } from '../styles';
 
 const AuthStack = createNativeStackNavigator();
 const MainTab = createBottomTabNavigator();
 
-import RegistrationScreen from "./Screens/RegistrationScreen";
-import LoginScreen from "./Screens/LoginScreen";
-import PostsScreen from "./Screens/mainScreen/PostsScreen";
-import CreateScreen from "./Screens/mainScreen/CreateScreen";
-import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
-
-const useRoute = (isAuth) => {
+const useRoute = isAuth => {
   if (!isAuth) {
     return (
       <AuthStack.Navigator>
@@ -26,15 +23,15 @@ const useRoute = (isAuth) => {
           options={{
             headerShown: false,
           }}
-          name="Registration"
-          component={RegistrationScreen}
+          name={screens.registration}
+          component={AppScreens.RegistrationScreen}
         />
         <AuthStack.Screen
           options={{
             headerShown: false,
           }}
-          name="Login"
-          component={LoginScreen}
+          name={screens.login}
+          component={AppScreens.LoginScreen}
         />
       </AuthStack.Navigator>
     );
@@ -43,91 +40,70 @@ const useRoute = (isAuth) => {
     // <MainTab.Navigator screenOptions={styles.mainTabContainer}>
     <MainTab.Navigator screenOptions={styles.mainTabContainer}>
       <MainTab.Screen
-        name="Posts"
-        component={PostsScreen}
+        name={screens.posts}
+        component={AppScreens.PostsScreen}
         options={{
-          headerShown: false,
+          title: 'Публікації',
+          headerStyle: {
+            height: 83,
+            borderBottomWidth: 1,
+            borderColor: colors.notActiveInput,
+          },
           tabBarShowLabel: false,
 
           tabBarIcon: (focused, color, size) => (
-            <SimpleLineIcons name="grid" size={24} color="#212121CC" />
+            <SimpleLineIcons name="grid" size={24} color={colors.iconGrey} />
           ),
         }}
       />
       <MainTab.Screen
-        name="Create post"
-        component={CreateScreen}
+        name={screens.createPost}
+        component={AppScreens.CreatePostsScreen}
         options={{
-          title: "Создать публикацию",
+          title: 'Створити публікацію',
           headerStyle: {
             height: 83,
             borderBottomWidth: 1,
-            borderColor: "#E8E8E8",
+            borderColor: colors.notActiveInput,
           },
-
           tabBarStyle: {
-            display: "none",
+            display: 'none',
           },
-
           headerTitleContainerStyle: {
-            // height: 88,
             paddingBottom: 11,
             marginLeft: 0,
           },
-
           headerTitleStyle: {
-            fontWeight: "500",
+            fontWeight: '500',
             fontSize: 17,
             letterSpacing: -0.408,
-            color: "#212121",
-            marginTop: "auto",
+            color: colors.title,
+            marginTop: 'auto',
           },
-
           headerLeftContainerStyle: {
             paddingLeft: 16,
-            marginTop: "auto",
+            marginTop: 'auto',
             marginBottom: 11,
           },
-
           headerLeft: (focused, color, size) => (
-            // <Pressable
-            //   onPress={() => {
-            //     console.log(123);
-            //     navigation.navigate("Login");
-            //   }}
-            // >
-            //   <Feather name="log-out" size={24} color="black" />
-            // </Pressable>
-            <AntDesign
-              name="arrowleft"
-              size={24}
-              color="#212121CC"
-              onPress={() => {}}
-            />
+            <AntDesign name="arrowleft" size={24} color={colors.iconGrey} onPress={() => {}} />
           ),
-
           tabBarShowLabel: false,
-          // tabBarLabel: (focused, color) => (
-          //   <View style={styles.mainTabBtn}>
-          //     <AntDesign name="plus" size={13} color="#FFFFFF" />
-          //   </View>
-          // ),
-
           tabBarIcon: (focused, color, size) => (
             <View style={styles.mainTabBtn}>
-              <AntDesign name="plus" size={13} color="#FFFFFF" />
+              <AntDesign name="plus" size={13} color={colors.mainWhite} />
             </View>
           ),
         }}
       />
       <MainTab.Screen
-        name="Profile"
-        component={ProfileScreen}
+        name={screens.profile}
+        component={AppScreens.ProfileScreen}
         options={{
           headerShown: false,
           tabBarShowLabel: false,
           tabBarIcon: (focused, color, size) => (
-            <Feather name="user" size={24} color="#212121CC" />
+            <Feather name="user" size={24} color={colors.iconGrey} />
           ),
         }}
       />
@@ -139,7 +115,7 @@ export default useRoute;
 
 const styles = StyleSheet.create({
   mainTabContainer: {
-    headerTitleAlign: "center",
+    headerTitleAlign: 'center',
 
     // styles change dynamically when unrolling !!!
     // in MapScreen and CommentsScreen
@@ -156,8 +132,8 @@ const styles = StyleSheet.create({
     width: 70,
     borderWidth: 0,
     borderRadius: 20,
-    backgroundColor: "#FF6C00",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: '#FF6C00',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

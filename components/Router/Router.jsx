@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import HomeScreen from '../screens/HomeScreen';
+import HomeScreen from '../screens/ProfileScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 
 const Router = () => {
