@@ -14,7 +14,7 @@ import { screens } from './screens/screens';
 import * as MediaLibrary from 'expo-media-library';
 import { Feather, MaterialIcons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-// import { storage, firestoreDB } from '../../firebase/config';
+import { storage, firestoreDB } from '../firebase/config';
 import { ref, getDownloadURL, uploadBytes } from 'firebase/storage';
 import { collection, addDoc } from 'firebase/firestore';
 import ua from '../lang';
@@ -25,6 +25,7 @@ const initialState = {
   photo: '',
   title: '',
   location: '',
+  coords: null,
 };
 const CreatePostForm = ({ navigation }) => {
   const [formData, setFormDdata] = useState(initialState);
@@ -36,11 +37,61 @@ const CreatePostForm = ({ navigation }) => {
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
 
-    console.log('take foto', photo.uri);
+    // console.log('take foto', photo.uri);
+
+    const response = await fetch(photo);
+
+    console.log('response:   -----> ', response);
 
     setFormDdata(prev => ({ ...prev, photo: photo.uri }));
 
     await MediaLibrary.createAssetAsync(photo.uri);
+  };
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(formData.photo);
+    console.log('response:   -----> ', response);
+    const file = await response.blob();
+
+    // add uuid or nanoid
+    const uniquePostId = Date.now().toString();
+
+    const data = await ref(storage, `postImage/${uniquePostId}`);
+    console.log(data);
+
+    await uploadBytes(data, file).then(snapshot => {
+      console.log('Uploaded a blob or file!');
+    });
+
+    const downloadedPhoto = await getDownloadURL(data)
+      .then(url => {
+        return url;
+        // тут можна вставити фотку в якийсь елемент
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    // console.log("downloadedPhoto -->", downloadedPhoto);
+    return downloadedPhoto;
+  };
+
+  const uploadPostToServer = async () => {
+    try {
+      const photo = await uploadPhotoToServer();
+      console.log(photo);
+      const data = {
+        ...state,
+        photo,
+        userId,
+        login,
+      };
+      console.log('data:------------>', data);
+      const createPost = await addDoc(collection(firestoreDB, 'posts'), data);
+      console.log('Document written with ID: ', createPost);
+      console.log('Document written with ID: ', createPost.id);
+      // console.log(123456);
+    } catch (e) {
+      console.error('Error adding document: ', e);
+    }
   };
   function onSubmit() {
     console.log(formData);
@@ -59,7 +110,7 @@ const CreatePostForm = ({ navigation }) => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
 
-      console.log('camera status', status);
+      // console.log('camera status', status);
 
       await MediaLibrary.requestPermissionsAsync();
 
@@ -78,26 +129,16 @@ const CreatePostForm = ({ navigation }) => {
 
       let location = await Location.getCurrentPositionAsync({});
 
-      // console.log('location:', location);
-
-      const { latitude, longitude } = location.coords;
-
-      // console.log({ latitude, longitude });
-
       setFormDdata(prev => {
         return {
           ...prev,
-          location: {
-            latitude,
-            longitude,
-          },
+          coords: location.coords,
         };
       });
       // console.log('state in useEffect:', state);
     })();
   }, []);
 
-  console.log(formData.photo);
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={s.container}>
@@ -111,10 +152,6 @@ const CreatePostForm = ({ navigation }) => {
               <MaterialIcons name="camera-alt" size={24} color={colors.iconGrey} />
             </Pressable>
           </Camera>
-
-          <Pressable style={{ ...s.addBtn, ...s.addBtnActive }} onPress={() => {}}>
-            <MaterialIcons name="camera-alt" size={24} color={colors.iconGrey} />
-          </Pressable>
 
           {formData.photo && <Image style={s.img} source={{ uri: formData.photo }} />}
         </View>

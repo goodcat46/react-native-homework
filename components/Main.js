@@ -8,6 +8,7 @@ import { auth } from '../firebase/config';
 import { Text } from 'react-native';
 
 import useRoute from './router';
+import { authStateChangedThunk } from '../redux/auth/auth.thunks';
 // import { authStateChanged } from '../redux/auth/authOperations';
 
 const Main = () => {
@@ -17,11 +18,11 @@ const Main = () => {
 
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(authStateChanged());
-  // }, []);
+  useEffect(() => {
+    dispatch(authStateChangedThunk());
+  }, []);
 
-  // console.log(stateChange);
+  console.log(stateChange);
 
   const routing = useRoute(stateChange);
 

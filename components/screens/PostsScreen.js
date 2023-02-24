@@ -11,6 +11,7 @@ import { useDispatch } from 'react-redux';
 import DefPostsScreens from './NestedScreens/DefPostsScreens';
 import CommentsScreen from './NestedScreens/CommentsScreen';
 import MapScreen from './NestedScreens/MapScreen';
+import { logOutUserThunk } from '../../redux/auth/auth.thunks';
 const NestedScreen = createNativeStackNavigator();
 
 const PostsScreen = () => {
@@ -39,7 +40,7 @@ const PostsScreen = () => {
               size={24}
               color="#BDBDBD"
               onPress={() => {
-                dispatch();
+                dispatch(logOutUserThunk());
               }}
             />
           ),

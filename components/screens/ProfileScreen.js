@@ -7,18 +7,19 @@ import PostList from '../PostList';
 import BackgroundImage from './BackgroundImage';
 
 const ProfileScreen = ({ navigation }) => {
-  const { login, avatar } = useSelector(state => state.auth);
+  const { user } = useSelector(state => state.auth);
   const { myPosts = [] } = useSelector(state => state.posts);
 
+  console.log(user);
   return (
     <BackgroundImage>
       <View style={s.container}>
         <View style={s.screen}>
           <Pressable style={s.imgBox} onPress={ev => console.log('press on avatar')}>
-            <Image source={avatar || require('../../assets/avatarExample.jpg')} />
+            <Image source={user?.photoURL || require('../../assets/avatarExample.jpg')} />
           </Pressable>
 
-          <Text style={s.profileName}>{login || 'Natali Romanova'}</Text>
+          <Text style={s.profileName}>{user?.displayName || 'Natali Romanova'}</Text>
 
           <PostList {...{ navigation, data: myPosts }} />
         </View>

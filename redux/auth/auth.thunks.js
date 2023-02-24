@@ -27,11 +27,11 @@ export const registerUserThunk = createAsyncThunk(
 
       console.log('updatedNewUser', { newUwer, updatedNewUser });
 
-      const { uid, displayName } = auth.currentUser;
+      const { displayName, email, photoURL, uid } = auth.currentUser;
 
-      payload?.onSuccess({ uid, displayName });
+      payload?.onSuccess({ displayName, email, photoURL, uid });
 
-      return { userId: uid, login: displayName };
+      return { displayName, email, photoURL, uid };
     } catch (error) {
       console.log(error);
       payload?.onError(error);
@@ -41,9 +41,9 @@ export const registerUserThunk = createAsyncThunk(
   }
 );
 
-export const loginUserThunk = createAsyncThunk('auth/loginUserThunk', async (payload, thunkAPI) => {
+export const logInUserThunk = createAsyncThunk('auth/logInUserThunk', async (payload, thunkAPI) => {
   try {
-    console.log(payload);
+    // console.log(payload);
 
     const { user } = await signInWithEmailAndPassword(
       auth,
@@ -51,11 +51,12 @@ export const loginUserThunk = createAsyncThunk('auth/loginUserThunk', async (pay
       payload?.submitData?.password
     );
 
-    // console.log(user);
+    // console.log('login thunk ============>>>>>', user);
 
     payload?.onSuccess(user);
+    const { displayName, email, photoURL, uid } = user;
 
-    return user;
+    return { displayName, email, photoURL, uid };
   } catch (error) {
     console.log(error);
     payload?.onError(error);
@@ -73,6 +74,7 @@ export const authStateChangedThunk = createAsyncThunk(
         onAuthStateChanged(auth, user => {
           if (user) {
             userData = { user, stateChange: true };
+            console.log('userData thunk', user);
           }
         });
         return userData;
@@ -93,13 +95,12 @@ export const authStateChangedThunk = createAsyncThunk(
 );
 
 export const logOutUserThunk = createAsyncThunk(
-  'auth/loginUserThunk',
+  'auth/logOutUserThunk',
   async (payload, thunkAPI) => {
     try {
       signOut(auth);
 
       payload?.onSuccess();
-      console.log('Sign-out successful');
       return;
     } catch (error) {
       console.log(error);

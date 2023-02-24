@@ -18,7 +18,7 @@ import ua from '../../lang';
 import { screens } from './screens';
 import BackgroundImage from './BackgroundImage';
 import { useDispatch } from 'react-redux';
-import { loginUserThunk } from '../../redux/auth/auth.thunks';
+import { logInUserThunk } from '../../redux/auth/auth.thunks';
 
 const initialState = {
   email: '',
@@ -49,13 +49,15 @@ const LoginScreen = ({ navigation }) => {
 
     const payload = {
       submitData: formData,
-      onSuccess: data => {},
-      onError: error => {},
+      onSuccess: data => {
+        console.log('login screen=======================>', data);
+      },
+      onError: error => {
+        console.log('login screen=======================>', error);
+      },
     };
 
-    dispatch(loginUserThunk(payload));
-
-    setFormData(initialState);
+    dispatch(logInUserThunk(payload));
   }
 
   return (

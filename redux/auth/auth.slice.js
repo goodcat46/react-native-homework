@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import {
   registerUserThunk,
-  loginUserThunk,
+  logInUserThunk,
   authStateChangedThunk,
   logOutUserThunk,
 } from './auth.thunks';
 
-const state = {
+const initialState = {
   user: {
     displayName: null,
     email: null,
@@ -21,9 +21,10 @@ const state = {
 
 export const authSlice = createSlice({
   name: 'auth',
-  initialState: state,
+  initialState: initialState,
   extraReducers: {
     [registerUserThunk.fulfilled]: (state, { payload }) => {
+      console.log('register action ========>>>', payload);
       const { displayName, email, photoURL, uid } = payload;
       state.user = { displayName, email, photoURL, uid };
       state.stateChange = true;
@@ -33,29 +34,36 @@ export const authSlice = createSlice({
       state.error === payload;
     },
 
-    [loginUserThunk.fulfilled]: (state, { payload }) => {
-      console.log('state login action', payload);
+    [logInUserThunk.fulfilled]: (state, { payload }) => {
+      console.log('state login action ================>>>', payload);
+
       const { displayName, email, photoURL, uid } = payload;
       state.user = { displayName, email, photoURL, uid };
-      stateChange = true;
+      state.stateChange = true;
     },
-    [loginUserThunk.pending]: (state, { payload }) => {},
-    [loginUserThunk.rejected]: (state, { payload }) => {
-      console.log('state login', payload);
+    [logInUserThunk.pending]: (state, { payload }) => {},
+    [logInUserThunk.rejected]: (state, { payload }) => {
+      console.log('state login ERROR ============>>>>', payload);
       state.error === payload;
     },
 
     [logOutUserThunk.fulfilled]: (state, { payload }) => {
-      state.login = null;
-      state.userId = null;
+      // state = { ...initialState };
+      state.stateChange = false;
     },
     [logOutUserThunk.pending]: (state, { payload }) => {},
-    [logOutUserThunk.rejected]: (state, { payload }) => {},
+    [logOutUserThunk.rejected]: (state, { payload }) => {
+      state.error = payload;
+    },
 
     [authStateChangedThunk.fulfilled]: (state, { payload }) => {
-      state.stateChange = true;
+      console.log('authStateChanged action ====>>>', payload);
+      state.stateChange = payload?.stateChange;
     },
     [authStateChangedThunk.pending]: (state, { payload }) => {},
-    [authStateChangedThunk.rejected]: (state, { payload }) => {},
+    [authStateChangedThunk.rejected]: (state, { payload }) => {
+      state = initialState;
+      state.error = payload;
+    },
   },
 });

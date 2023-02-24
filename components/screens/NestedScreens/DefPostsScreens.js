@@ -5,8 +5,8 @@ import { colors } from '../../../styles';
 import PostList from '../../PostList';
 
 const DefPostsScreens = ({ navigation }) => {
-  const { login, email, avatar } = useSelector(state => state.auth);
-  const { posts = [1, 2, 3] } = useSelector(state => state.posts);
+  const { user } = useSelector(state => state.auth);
+  const { posts = [] } = useSelector(state => state.posts);
 
   return (
     <View>
@@ -14,12 +14,12 @@ const DefPostsScreens = ({ navigation }) => {
         <View style={s.profileWrapper}>
           <Image
             style={s.profileImg}
-            source={avatar || require('../../../assets/avatarExample.jpg')}
+            source={user?.photoURL || require('../../../assets/avatarExample.jpg')}
           />
 
           <View>
-            <Text style={s.name}>{login || 'Natali Romanova'}</Text>
-            <Text>{email || 'natashka@mail.com'}</Text>
+            <Text style={s.name}>{user?.displayName || 'Natali Romanova'}</Text>
+            <Text>{user?.email || 'natashka@mail.com'}</Text>
           </View>
         </View>
 
