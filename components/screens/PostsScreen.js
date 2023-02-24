@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Image } from 'react-native';
 import { StyleSheet, Text } from 'react-native';
 import { View } from 'react-native';
@@ -12,10 +12,24 @@ import DefPostsScreens from './NestedScreens/DefPostsScreens';
 import CommentsScreen from './NestedScreens/CommentsScreen';
 import MapScreen from './NestedScreens/MapScreen';
 import { logOutUserThunk } from '../../redux/auth/auth.thunks';
+import { getAllPostsThunk } from '../../redux/posts/posts.thunks';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { firestoreDB } from '../../firebase/config';
 const NestedScreen = createNativeStackNavigator();
 
 const PostsScreen = () => {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    onSnapshot(collection(firestoreDB, 'posts'), data => {
+      // console.log("data.docs: ============>", data.docs[0].data());
+      const payload = {
+        data,
+      };
+
+      dispatch(getAllPostsThunk(payload));
+    });
+  }, []);
   return (
     <NestedScreen.Navigator screenOptions={s.mainTabContainer}>
       <NestedScreen.Screen

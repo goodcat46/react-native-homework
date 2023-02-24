@@ -8,13 +8,15 @@ const DefPostsScreens = ({ navigation }) => {
   const { user } = useSelector(state => state.auth);
   const { posts = [] } = useSelector(state => state.posts);
 
+  console.log(posts);
+
   return (
     <View>
       <View style={s.screen}>
         <View style={s.profileWrapper}>
           <Image
             style={s.profileImg}
-            source={user?.photoURL || require('../../../assets/avatarExample.jpg')}
+            source={user?.photoURL || require('../../../assets/avatar.png')}
           />
 
           <View>

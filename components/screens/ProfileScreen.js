@@ -1,16 +1,29 @@
-import React from 'react';
+import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import React, { useEffect } from 'react';
 import { Image } from 'react-native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Path, Svg } from 'react-native-svg';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { firestoreDB } from '../../firebase/config';
+import { getMyPostsThunk } from '../../redux/posts/posts.thunks';
 import { colors } from '../../styles';
 import PostList from '../PostList';
 import BackgroundImage from './BackgroundImage';
 
 const ProfileScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth);
   const { myPosts = [] } = useSelector(state => state.posts);
 
+  useEffect(() => {
+    onSnapshot(query(collection(firestoreDB, 'posts'), where('userId', '==', user?.uid)), data => {
+      console.log('my posts: ============>', data);
+      const payload = {
+        data,
+      };
+      dispatch(getMyPostsThunk(payload));
+    });
+  }, []);
   return (
     <BackgroundImage>
       <View style={s.container}>

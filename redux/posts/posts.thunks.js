@@ -6,22 +6,17 @@ import {
   onAuthStateChanged,
   signOut,
 } from 'firebase/auth';
+import { onSnapshot } from 'firebase/firestore';
 // import { auth } from '../../firebase/config';
 
-export const getAllPostsThunk = createAsyncThunk('posts/getAllPostsThunk', async () => {
-  let response;
+export const getAllPostsThunk = createAsyncThunk('posts/getAllPostsThunk', async payload => {
   try {
-    const querySnapshot = await onSnapshot(collection(firestoreDB, 'posts'), data => {
-      // console.log("data.docs: ============>", data.docs[0].data());
-      response = data;
-    });
+    // payload?.onSuccess();
 
-    payload?.onSuccess(response);
-
-    return response;
+    return payload?.data;
   } catch (error) {
     console.log(error);
-    payload?.onError(error);
+    // payload?.onError(error);
   }
 });
 
@@ -36,11 +31,11 @@ export const getMyPostsThunk = createAsyncThunk('posts/getMyPostsThunk', async (
       }
     );
 
-    payload?.onSuccess(response);
+    // payload?.onSuccess();
 
     return response;
   } catch (error) {
     console.log(error);
-    payload?.onError(error);
+    // payload?.onError(error);
   }
 });
