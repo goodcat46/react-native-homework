@@ -20,6 +20,7 @@ import { collection, addDoc } from 'firebase/firestore';
 import ua from '../lang';
 import { Text } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native';
+import { useSelector } from 'react-redux';
 
 const initialState = {
   photo: '',
@@ -28,20 +29,18 @@ const initialState = {
   coords: null,
 };
 const CreatePostForm = ({ navigation }) => {
+  const { user } = useSelector(state => state.auth);
   const [formData, setFormDdata] = useState(initialState);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isInputOnFocus, setIsInputOnFocus] = useState(false);
   const [hasPermission, setHasPermission] = useState(false);
+  const [preview, setPreview] = useState(null);
   const [camera, setCamera] = useState(null);
 
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
 
-    // console.log('take foto', photo.uri);
-
-    const response = await fetch(photo);
-
-    console.log('response:   -----> ', response);
+    console.log(photo);
 
     setFormDdata(prev => ({ ...prev, photo: photo.uri }));
 
@@ -55,7 +54,7 @@ const CreatePostForm = ({ navigation }) => {
     // add uuid or nanoid
     const uniquePostId = Date.now().toString();
 
-    const data = await ref(storage, `postImage/${uniquePostId}`);
+    const data = ref(storage, `postImage/${uniquePostId}`);
     console.log(data);
 
     await uploadBytes(data, file).then(snapshot => {
@@ -79,22 +78,21 @@ const CreatePostForm = ({ navigation }) => {
       const photo = await uploadPhotoToServer();
       console.log(photo);
       const data = {
-        ...state,
+        ...formData,
         photo,
-        userId,
-        login,
+        userId: user?.uid,
+        displayName: user?.displayName,
       };
       console.log('data:------------>', data);
       const createPost = await addDoc(collection(firestoreDB, 'posts'), data);
-      console.log('Document written with ID: ', createPost);
+
       console.log('Document written with ID: ', createPost.id);
-      // console.log(123456);
     } catch (e) {
       console.error('Error adding document: ', e);
     }
   };
   function onSubmit() {
-    console.log(formData);
+    uploadPostToServer();
   }
 
   const onPressDeleteBtn = () => {
@@ -152,11 +150,11 @@ const CreatePostForm = ({ navigation }) => {
               <MaterialIcons name="camera-alt" size={24} color={colors.iconGrey} />
             </Pressable>
           </Camera>
-
-          {formData.photo && <Image style={s.img} source={{ uri: formData.photo }} />}
         </View>
 
-        <Text style={s.subTitle}>Завантажити зображення</Text>
+        <Text style={s.subTitle}>
+          {formData.photo ? 'Редагувати зображення' : 'Завантажити зображення'}
+        </Text>
 
         <View style={s.inputs}>
           <View style={s.inputWrapper}>
@@ -199,8 +197,12 @@ const CreatePostForm = ({ navigation }) => {
           <View style={s.deleteBtnWrraper}>
             <Pressable
               style={s.deleteBtn}
-              activeOpacity={!!formData.title || !!formData.location ? 0.2 : 1}
-              onPress={!!formData.title || !!formData.location ? onPressDeleteBtn : null}
+              activeOpacity={!!formData.title || !!formData.location || !!formData.photo ? 0.2 : 1}
+              onPress={
+                !!formData.title || !!formData.location || !!formData.photo
+                  ? onPressDeleteBtn
+                  : null
+              }
             >
               {!!formData.title || !!formData.location ? (
                 <Feather name="trash-2" size={24} color="black" />

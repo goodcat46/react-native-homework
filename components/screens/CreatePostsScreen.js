@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
+import { View } from 'react-native';
 import { colors } from '../../styles';
 import CreatePostForm from '../CreatePostForm';
 
 const CreatePostsScreen = ({ navigation }) => {
   return (
     <View style={s.screen}>
-      <CreatePostForm {...{ navigation }}></CreatePostForm>
+      <ScrollView>
+        <CreatePostForm {...{ navigation }}></CreatePostForm>
+      </ScrollView>
     </View>
   );
 };

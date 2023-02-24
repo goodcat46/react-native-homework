@@ -12,6 +12,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   Platform,
+  Image,
 } from 'react-native';
 import { screens } from './screens';
 import { Path, Svg } from 'react-native-svg';
@@ -75,17 +76,16 @@ const RegistrationScreen = ({ navigation }) => {
         >
           <View style={{ ...s.form, marginBottom: isShowKeyboard ? -190 : 0 }}>
             <Pressable style={s.imgBox} onPress={ev => console.log(ev)}>
-              {/* <Svg
-            width="13"
-            height="13"
-            viewBox="0 0 32 32"
-            style={{
-              //   transform: [{ rotate: "45deg" }],
-              color: '#ff6c00',
-            }}
-          >
-            <Path fill="currentColor" d="M17.231 0h-2.462v14.769h-14.769v2.462h14.769v14.769h2.462v-14.769h14.769v-2.462h-14.769v-14.769z" />
-          </Svg> */}
+              <Svg width="30" height="30" viewBox="0 0 24 24" style={s.svg}>
+                <Path
+                  fill="currentColor"
+                  d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                />
+              </Svg>
+              <Image
+                style={{ width: '100%', height: '100%' }}
+                source={require('../../assets/avatar.png')}
+              />
             </Pressable>
 
             <Text style={s.title}>{ua.registration}</Text>
@@ -114,7 +114,6 @@ const RegistrationScreen = ({ navigation }) => {
                   }}
                   onBlur={() => {
                     setIsShowKeyboard(false);
-                    setActiveInputName(null);
                   }}
                 />
               </View>
@@ -141,7 +140,6 @@ const RegistrationScreen = ({ navigation }) => {
                   }}
                   onBlur={() => {
                     setActiveInputName(null);
-                    setIsShowKeyboard(false);
                   }}
                 />
               </View>
@@ -168,7 +166,6 @@ const RegistrationScreen = ({ navigation }) => {
                   }}
                   onBlur={() => {
                     setActiveInputName(null);
-                    setIsShowKeyboard(false);
                   }}
                 />
               </View>
@@ -218,6 +215,15 @@ const s = StyleSheet.create({
 
     marginTop: 90,
   },
+  svg: {
+    // transform: [{ rotate: "45deg" }],
+    position: 'absolute',
+    bottom: 5,
+    right: -10,
+
+    color: '#ff6c00',
+  },
+
   btn: {
     backgroundColor: colors.brandOrange,
     alignItems: 'center',

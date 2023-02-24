@@ -4,6 +4,9 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { colors } from '../styles';
 import { screens } from './screens/screens';
 const Post = ({ navigation, item, name, comments, likes, location, img }) => {
+  const addLikes = () => {
+    console.log('addLike');
+  };
   return (
     <View style={s.Post}>
       <View style={s.imgBox}>
@@ -11,16 +14,6 @@ const Post = ({ navigation, item, name, comments, likes, location, img }) => {
       </View>
       <View style={s.footer}>
         <Text style={s.name}>{name || 'Post name'}</Text>
-        {/* <View style={s.wraper}>
-          <View style={s.comments}>{comments}</View>
-
-          <View style={s.likes}>
-            <Feather name="" />
-            <View>{likes}</View>
-          </View>
-
-          <View style={s.location}>{location}</View>
-        </View> */}
 
         <View style={s.allLinksWrapper}>
           <TouchableOpacity
@@ -34,7 +27,12 @@ const Post = ({ navigation, item, name, comments, likes, location, img }) => {
             }
           >
             <Feather name="message-circle" size={24} color="#BDBDBD" style={s.commentIcon} />
-            <Text style={s.comment}>8</Text>
+            <Text style={s.comment}>{comments || 8}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={s.likeWrapper} activeOpacity={0.7} onPress={addLikes}>
+            <Feather name="thumbs-up" size={24} color="#FF6C00" />
+            <Text style={s.like}>{likes || 8}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -52,7 +50,7 @@ const Post = ({ navigation, item, name, comments, likes, location, img }) => {
           >
             <Feather name="map-pin" size={24} color="#BDBDBD" style={s.mapPin} />
 
-            <Text style={s.location}>{item?.location || 'Location'}</Text>
+            <Text style={s.location}>{location || 'Location'}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -63,8 +61,8 @@ const Post = ({ navigation, item, name, comments, likes, location, img }) => {
 const s = StyleSheet.create({
   Post: {
     width: '100%',
-    borderWidth: 1,
-    borderColor: 'tomato',
+    // borderWidth: 1,
+    // borderColor: 'tomato',
     marginBottom: 32,
     minHeight: 320,
   },
@@ -120,7 +118,14 @@ const s = StyleSheet.create({
     // flexDirection: "row",
     transform: [{ scaleX: -1 }],
   },
-
+  likeWrapper: {
+    flexDirection: 'row',
+    marginRight: 'auto',
+    marginLeft: 16,
+  },
+  like: {
+    marginHorizontal: 8,
+  },
   mapLinkWrapper: {
     flexDirection: 'row',
     alignItems: 'flex-end',
