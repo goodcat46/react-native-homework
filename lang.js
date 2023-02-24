@@ -10,6 +10,7 @@ const ua = {
   haveNotAccount: 'Не маєте аккаунта?',
   goToLogin: 'Увійдіть',
   goToRegistration: 'Зареєструватись',
+  noCameraPermission: 'Відсутній дозвіл на використання камери',
 };
 
 export default ua;

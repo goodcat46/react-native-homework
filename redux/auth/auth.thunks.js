@@ -64,9 +64,21 @@ export const authStateChangedThunk = createAsyncThunk(
   'auth/authStateChangedThunk',
   async (payload, thunkAPI) => {
     try {
-      payload?.onSuccess({ uid, displayName });
+      const getUserData = () => {
+        let userData = null;
+        onAuthStateChanged(auth, user => {
+          if (user) {
+            userData = { user, stateChange: true };
+          }
+        });
+        return userData;
+      };
 
-      return;
+      const userData = getUserData();
+
+      payload?.onSuccess(userData);
+
+      return userData;
     } catch (error) {
       console.log(error);
       payload?.onError(error);

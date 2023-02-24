@@ -1,6 +1,12 @@
 import { auth } from '../../firebase/config';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, onAuthStateChanged, signOut } from 'firebase/auth';
-import { authSlice } from './authSlice';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged,
+  signOut,
+} from 'firebase/auth';
+import { authSlice } from './auth.slice';
 
 // export function test() {
 //   return console.log(321);

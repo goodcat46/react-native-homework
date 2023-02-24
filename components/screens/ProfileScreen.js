@@ -1,12 +1,14 @@
 import React from 'react';
 import { Image } from 'react-native';
-import { FlatList } from 'react-native';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { useSelector } from 'react-redux';
 import { colors } from '../../styles';
-import Publication from '../Post';
+import PostList from '../PostList';
 import BackgroundImage from './BackgroundImage';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
+  const posts = useSelector(state => state.posts);
+
   return (
     <BackgroundImage>
       <View style={s.container}>
@@ -17,13 +19,7 @@ const ProfileScreen = () => {
 
           <Text style={s.profileName}>Natali Romanova</Text>
 
-          <View style={s.list}>
-            <FlatList
-              data={[1, 2, 3, 4]}
-              renderItem={({ item }) => <Publication />}
-              keyExtractor={item => item}
-            ></FlatList>
-          </View>
+          <PostList {...{ navigation, data: posts }} />
         </View>
       </View>
     </BackgroundImage>
@@ -59,11 +55,7 @@ const s = StyleSheet.create({
     top: -60,
   },
   svgBox: {},
-  list: {
-    width: '100%',
-    padding: 16,
-    marginTop: 32,
-  },
+
   profileName: {
     fontSize: 32,
     fontWeight: '500',

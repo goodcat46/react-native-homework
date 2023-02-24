@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { startMapper } from 'react-native-reanimated/lib/reanimated2/core';
-import { registerUserThunk, loginUserThunk } from './auth.thunks';
+import { registerUserThunk, loginUserThunk, authStateChangedThunk } from './auth.thunks';
 
 const state = {
   userId: null,
@@ -42,8 +41,8 @@ export const authSlice = createSlice({
       state.error === payload;
     },
 
-    // [registerUserThunk.fulfilled]: (state, { payload }) => {},
-    // [registerUserThunk.pending]: (state, { payload }) => {},
-    // [registerUserThunk.rejected]: (state, { payload }) => {},
+    [authStateChangedThunk.fulfilled]: (state, { payload }) => {},
+    [authStateChangedThunk.pending]: (state, { payload }) => {},
+    [authStateChangedThunk.rejected]: (state, { payload }) => {},
   },
 });

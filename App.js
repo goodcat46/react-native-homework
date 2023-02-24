@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Provider } from 'react-redux';
 import Main from './components/Main';
@@ -30,10 +30,20 @@ const App = () => {
     prepare();
   }, []);
 
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+
   return (
     <>
       <Provider store={store}>
-        <View style={s.app}>
+        <View style={s.app} onLayout={onLayoutRootView}>
           <View style={s.container}>
             {/* <RegistrationScreen></RegistrationScreen> */}
             {/* <LoginScreen></LoginScreen> */}

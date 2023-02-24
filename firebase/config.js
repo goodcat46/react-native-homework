@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getStorage } from 'firebase/storage';
+import { getFirestore } from 'firebase/firestore';
 
 // import { getAnalytics } from "firebase/analytics";
 
@@ -11,14 +11,23 @@ import { getFirestore } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCIfp7uV_JRXcLadgHlYKnGhN_zKnal8Sw",
+//   authDomain: "rn-social-58923.firebaseapp.com",
+//   projectId: "rn-social-58923",
+//   storageBucket: "rn-social-58923.appspot.com",
+//   messagingSenderId: "866615434732",
+//   appId: "1:866615434732:web:7f7abcd66861f2db3574c9",
+//   measurementId: "G-83MSL9WXDX",
+// };
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCIfp7uV_JRXcLadgHlYKnGhN_zKnal8Sw",
-  authDomain: "rn-social-58923.firebaseapp.com",
-  projectId: "rn-social-58923",
-  storageBucket: "rn-social-58923.appspot.com",
-  messagingSenderId: "866615434732",
-  appId: "1:866615434732:web:7f7abcd66861f2db3574c9",
-  measurementId: "G-83MSL9WXDX",
+  apiKey: 'AIzaSyAjEoVyohiTfAKpW-5AdvVdik1Uy656iJk',
+  authDomain: 'react-native-homework-1.firebaseapp.com',
+  projectId: 'react-native-homework-1',
+  storageBucket: 'react-native-homework-1.appspot.com',
+  messagingSenderId: '304210435678',
+  appId: '1:304210435678:web:1e1cfad321443f40101ecf',
 };
 
 // Initialize Firebase

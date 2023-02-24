@@ -43,12 +43,7 @@ const useRoute = isAuth => {
         name={screens.posts}
         component={AppScreens.PostsScreen}
         options={{
-          title: 'Публікації',
-          headerStyle: {
-            height: 83,
-            borderBottomWidth: 1,
-            borderColor: colors.notActiveInput,
-          },
+          headerShown: false,
           tabBarShowLabel: false,
 
           tabBarIcon: (focused, color, size) => (
