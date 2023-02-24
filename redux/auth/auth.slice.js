@@ -7,6 +7,12 @@ import {
 } from './auth.thunks';
 
 const state = {
+  user: {
+    displayName: null,
+    email: null,
+    photoURL: null,
+    uid: null,
+  },
   userId: null,
   login: null,
   error: null,
@@ -16,29 +22,22 @@ const state = {
 export const authSlice = createSlice({
   name: 'auth',
   initialState: state,
-  reducers: {
-    updateUserProfile: (state, { payload }) => ({
-      ...state,
-      userId: payload.userId,
-      login: payload.login,
-    }),
-    authStateChange: (state, { payload }) => ({
-      ...state,
-      stateChange: payload.stateChange,
-    }),
-    authSignOutUser: () => state,
-  },
   extraReducers: {
     [registerUserThunk.fulfilled]: (state, { payload }) => {
-      state.userId === payload.userId, state.login === payload.login;
+      const { displayName, email, photoURL, uid } = payload;
+      state.user = { displayName, email, photoURL, uid };
+      state.stateChange = true;
     },
     [registerUserThunk.pending]: (state, { payload }) => {},
     [registerUserThunk.rejected]: (state, { payload }) => {
       state.error === payload;
     },
 
-    [loginUserThunk.fulfilled]: (state, payload) => {
+    [loginUserThunk.fulfilled]: (state, { payload }) => {
       console.log('state login action', payload);
+      const { displayName, email, photoURL, uid } = payload;
+      state.user = { displayName, email, photoURL, uid };
+      stateChange = true;
     },
     [loginUserThunk.pending]: (state, { payload }) => {},
     [loginUserThunk.rejected]: (state, { payload }) => {

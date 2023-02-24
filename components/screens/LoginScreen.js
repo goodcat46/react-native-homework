@@ -21,7 +21,7 @@ import { useDispatch } from 'react-redux';
 import { loginUserThunk } from '../../redux/auth/auth.thunks';
 
 const initialState = {
-  login: '',
+  email: '',
   password: '',
 };
 
@@ -44,14 +44,13 @@ const LoginScreen = ({ navigation }) => {
     console.log('formData', formData);
   }
   function onSubmitForm() {
-    console.log('formData', formData);
     setIsShowKeyboard(false);
     Keyboard.dismiss();
 
     const payload = {
-      submitData: {
-        ...formData,
-      },
+      submitData: formData,
+      onSuccess: data => {},
+      onError: error => {},
     };
 
     dispatch(loginUserThunk(payload));
@@ -76,25 +75,25 @@ const LoginScreen = ({ navigation }) => {
                   style={{
                     ...s.input,
                     backgroundColor:
-                      activeInputName === 'login' ? colors.mainWhite : colors.notActiveInput,
+                      activeInputName === 'email' ? colors.mainWhite : colors.notActiveInput,
                     borderColor:
-                      activeInputName === 'login'
+                      activeInputName === 'email'
                         ? colors.brandOrange
                         : colors.notActiveInputBrdClr,
                   }}
-                  placeholder={ua.login}
-                  name="login"
-                  value={formData.login}
+                  placeholder={ua.email}
+                  name="email"
+                  value={formData.email}
                   onChangeText={text => {
-                    onChangeFormData('login', text);
+                    onChangeFormData('email', text);
                   }}
                   onFocus={() => {
-                    setActiveInputName('login');
+                    setActiveInputName('email');
                     setIsShowKeyboard(true);
                   }}
                   onBlur={() => {
                     setActiveInputName(null);
-                    setIsShowKeyboard(false);
+                    // setIsShowKeyboard(false);
                   }}
                 />
               </View>
@@ -122,7 +121,7 @@ const LoginScreen = ({ navigation }) => {
                   }}
                   onBlur={() => {
                     setActiveInputName(null);
-                    setIsShowKeyboard(false);
+                    // setIsShowKeyboard(false);
                   }}
                 />
               </View>

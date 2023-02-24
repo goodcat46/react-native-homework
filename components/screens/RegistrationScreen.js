@@ -18,6 +18,8 @@ import { Path, Svg } from 'react-native-svg';
 import ua from '../../lang';
 import { colors } from '../../styles';
 import BackgroundImage from './BackgroundImage';
+import { useDispatch } from 'react-redux';
+import { registerUserThunk } from '../../redux/auth/auth.thunks';
 // import Svg, { Path } from 'react-native-svg';
 const initialState = {
   login: '',
@@ -30,6 +32,7 @@ const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [activeInputName, setActiveInputName] = useState(null);
   const [isPasswordHidden, setIsPasswordHidden] = useState(true);
+  const dispatch = useDispatch();
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -41,13 +44,21 @@ const RegistrationScreen = ({ navigation }) => {
       return { ...prev, [name]: text };
     });
 
-    console.log('formData', formData);
+    // console.log('formData', formData);
   }
 
   const onSubmitForm = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     setFormData(initialState);
+
+    const payload = {
+      submitData: formData,
+      onSuccess: data => {},
+      onError: error => {},
+    };
+
+    dispatch(registerUserThunk(payload));
     console.log(formData);
   };
 

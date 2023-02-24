@@ -12,7 +12,7 @@ export const registerUserThunk = createAsyncThunk(
   'auth/registerUserThunk',
   async (payload, thunkAPI) => {
     try {
-      // console.log(payload);
+      console.log('thunk payload', payload);
 
       const newUwer = await createUserWithEmailAndPassword(
         auth,
@@ -20,14 +20,12 @@ export const registerUserThunk = createAsyncThunk(
         payload.submitData?.password
       );
 
-      console.log('newUwer', newUwer);
-
       const updatedNewUser = await updateProfile(auth.currentUser, {
-        displayName: login,
+        displayName: payload.submitData?.login,
         // photoURL: "https://example.com/jane-q-user/profile.jpg",
       });
 
-      console.log('updatedNewUser', updatedNewUser);
+      console.log('updatedNewUser', { newUwer, updatedNewUser });
 
       const { uid, displayName } = auth.currentUser;
 
@@ -45,11 +43,17 @@ export const registerUserThunk = createAsyncThunk(
 
 export const loginUserThunk = createAsyncThunk('auth/loginUserThunk', async (payload, thunkAPI) => {
   try {
-    // console.log(payload);
+    console.log(payload);
 
-    const user = auth.currentUser;
+    const { user } = await signInWithEmailAndPassword(
+      auth,
+      payload?.submitData?.email,
+      payload?.submitData?.password
+    );
 
-    payload?.onSuccess({ uid, displayName });
+    // console.log(user);
+
+    payload?.onSuccess(user);
 
     return user;
   } catch (error) {
