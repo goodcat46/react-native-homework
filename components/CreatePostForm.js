@@ -36,13 +36,15 @@ const CreatePostForm = ({ navigation }) => {
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
 
-    console.log('take foto', photo);
+    console.log('take foto', photo.uri);
 
-    setFormDdata(prevState => ({ ...prevState, photo: photo.uri }));
+    setFormDdata(prev => ({ ...prev, photo: photo.uri }));
 
     await MediaLibrary.createAssetAsync(photo.uri);
   };
-  function onSubmit() {}
+  function onSubmit() {
+    console.log(formData);
+  }
 
   const onPressDeleteBtn = () => {
     setFormDdata(initialState);
@@ -68,8 +70,9 @@ const CreatePostForm = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
+
       if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+        console.log('Permission to access location was denied');
         return;
       }
 
@@ -103,17 +106,11 @@ const CreatePostForm = ({ navigation }) => {
 
           {!hasPermission && <Text>{ua.noCameraPermission}</Text>}
 
-          {hasPermission && !formData.photo && (
-            <Camera style={s.camera} ref={setCamera}>
-              <TouchableOpacity
-                style={{ ...s.addBtn, ...s.addBtnActive }}
-                activeOpacity={!!formData.title || !!formData.location ? 0.2 : 1}
-                onPress={takePhoto}
-              >
-                <MaterialIcons name="camera-alt" size={24} color={colors.iconGrey} />
-              </TouchableOpacity>
-            </Camera>
-          )}
+          <Camera style={s.camera} ref={setCamera}>
+            <Pressable style={{ ...s.addBtn, ...s.addBtnActive }} onPress={takePhoto}>
+              <MaterialIcons name="camera-alt" size={24} color={colors.iconGrey} />
+            </Pressable>
+          </Camera>
 
           <Pressable style={{ ...s.addBtn, ...s.addBtnActive }} onPress={() => {}}>
             <MaterialIcons name="camera-alt" size={24} color={colors.iconGrey} />
@@ -145,7 +142,8 @@ const CreatePostForm = ({ navigation }) => {
           <View style={s.inputWrapper}>
             <TextInput
               style={s.input}
-              onChangeText={value => setFormDdata(prev => ({ ...prev, title: value }))}
+              onChangeText={value => setFormDdata(prev => ({ ...prev, location: value }))}
+              value={formData.location}
               placeholder="Локація"
               onFocus={() => {
                 setIsShowKeyboard(true);
@@ -160,20 +158,20 @@ const CreatePostForm = ({ navigation }) => {
           <Pressable style={s.submitBtn} onPress={onSubmit}>
             <Text style={s.btnName}>Створити пост</Text>
           </Pressable>
-        </View>
 
-        <View style={s.deleteBtnWrraper}>
-          <Pressable
-            style={s.deleteBtn}
-            activeOpacity={!!formData.title || !!formData.location ? 0.2 : 1}
-            onPress={!!formData.title || !!formData.location ? onPressDeleteBtn : null}
-          >
-            {!!formData.title || !!formData.location ? (
-              <Feather name="trash-2" size={24} color="black" />
-            ) : (
-              <Feather name="trash-2" size={24} color="#BDBDBD" />
-            )}
-          </Pressable>
+          <View style={s.deleteBtnWrraper}>
+            <Pressable
+              style={s.deleteBtn}
+              activeOpacity={!!formData.title || !!formData.location ? 0.2 : 1}
+              onPress={!!formData.title || !!formData.location ? onPressDeleteBtn : null}
+            >
+              {!!formData.title || !!formData.location ? (
+                <Feather name="trash-2" size={24} color="black" />
+              ) : (
+                <Feather name="trash-2" size={24} color="#BDBDBD" />
+              )}
+            </Pressable>
+          </View>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -185,7 +183,7 @@ const s = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
 
-    paddingVertical: 32,
+    paddingTop: 32,
     paddingHorizontal: 16,
   },
   imgBox: {
@@ -272,6 +270,7 @@ const s = StyleSheet.create({
 
   deleteBtnWrraper: {
     paddingTop: 9,
+    paddingTop: 80,
     paddingBottom: 34,
     alignItems: 'center',
     marginTop: 'auto',

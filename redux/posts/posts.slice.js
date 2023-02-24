@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { getAllPostsThunk, getPostComentCount } from './posts.thunks';
+import { getAllPostsThunk, getMyPostsThunk } from './posts.thunks';
 
 const initialState = {
   posts: [{ location: '' }],
+  myPosts: [],
   error: null,
 };
 
@@ -14,7 +15,16 @@ export const postsSlice = createSlice({
     [getAllPostsThunk.fulfilled]: (state, { payload }) => {
       console.log('slice payload', payload);
 
-      state.posts === [...payload, ...state.posts];
+      const posts = payload.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+      state.posts === [...posts, ...state.posts];
+    },
+    [getMyPostsThunk.fulfilled]: (state, { payload }) => {
+      console.log('slice payload', payload);
+
+      const posts = payload.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+
+      state.myPosts === [...posts, ...state.myPosts];
     },
   },
 });

@@ -1,11 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { registerUserThunk, loginUserThunk, authStateChangedThunk } from './auth.thunks';
+import {
+  registerUserThunk,
+  loginUserThunk,
+  authStateChangedThunk,
+  logOutUserThunk,
+} from './auth.thunks';
 
 const state = {
   userId: null,
   login: null,
   error: null,
-  stateChange: true,
+  stateChange: false,
 };
 
 export const authSlice = createSlice({
@@ -41,7 +46,16 @@ export const authSlice = createSlice({
       state.error === payload;
     },
 
-    [authStateChangedThunk.fulfilled]: (state, { payload }) => {},
+    [logOutUserThunk.fulfilled]: (state, { payload }) => {
+      state.login = null;
+      state.userId = null;
+    },
+    [logOutUserThunk.pending]: (state, { payload }) => {},
+    [logOutUserThunk.rejected]: (state, { payload }) => {},
+
+    [authStateChangedThunk.fulfilled]: (state, { payload }) => {
+      state.stateChange = true;
+    },
     [authStateChangedThunk.pending]: (state, { payload }) => {},
     [authStateChangedThunk.rejected]: (state, { payload }) => {},
   },

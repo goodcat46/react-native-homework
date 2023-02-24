@@ -1,22 +1,29 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
+import { useSelector } from 'react-redux';
 import { colors } from '../../../styles';
 import PostList from '../../PostList';
 
 const DefPostsScreens = ({ navigation }) => {
+  const { login, email, avatar } = useSelector(state => state.auth);
+  const { posts = [1, 2, 3] } = useSelector(state => state.posts);
+
   return (
     <View>
       <View style={s.screen}>
         <View style={s.profileWrapper}>
-          <Image style={s.profileImg} source={require('../../../assets/avatarExample.jpg')} />
+          <Image
+            style={s.profileImg}
+            source={avatar || require('../../../assets/avatarExample.jpg')}
+          />
 
           <View>
-            <Text style={s.name}>Natali Romanova</Text>
-            <Text>natashka@mail.com</Text>
+            <Text style={s.name}>{login || 'Natali Romanova'}</Text>
+            <Text>{email || 'natashka@mail.com'}</Text>
           </View>
         </View>
 
-        <PostList {...{ navigation, data: [1, 2, 3] }} />
+        <PostList {...{ navigation, data: posts }} />
       </View>
     </View>
   );
@@ -30,10 +37,7 @@ const s = StyleSheet.create({
 
     textAlign: 'center',
 
-    // width: '100%',
-
-    borderWidth: 3,
-    borderColor: 'blue',
+    backgroundColor: colors.mainWhite,
   },
   profileWrapper: {
     flexDirection: 'row',

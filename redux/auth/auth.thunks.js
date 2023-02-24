@@ -87,3 +87,19 @@ export const authStateChangedThunk = createAsyncThunk(
     }
   }
 );
+
+export const logOutUserThunk = createAsyncThunk(
+  'auth/loginUserThunk',
+  async (payload, thunkAPI) => {
+    try {
+      signOut(auth);
+
+      payload?.onSuccess();
+      console.log('Sign-out successful');
+      return;
+    } catch (error) {
+      console.log(error);
+      payload?.onError();
+    }
+  }
+);

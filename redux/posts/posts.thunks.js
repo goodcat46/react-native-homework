@@ -9,34 +9,38 @@ import {
 // import { auth } from '../../firebase/config';
 
 export const getAllPostsThunk = createAsyncThunk('posts/getAllPostsThunk', async () => {
+  let response;
   try {
     const querySnapshot = await onSnapshot(collection(firestoreDB, 'posts'), data => {
       // console.log("data.docs: ============>", data.docs[0].data());
-      setPosts(data.docs.map(doc => ({ ...doc.data(), id: doc.id })));
+      response = data;
     });
 
-    payload?.onSuccess(querySnapshot);
+    payload?.onSuccess(response);
 
-    return querySnapshot;
+    return response;
   } catch (error) {
     console.log(error);
     payload?.onError(error);
   }
 });
 
-export const getPostComentCount = createAsyncThunk('posts/getPostComentCount', async payload => {
-  console.log(postId);
+export const getMyPostsThunk = createAsyncThunk('posts/getMyPostsThunk', async () => {
+  let response;
   try {
-    const docRef = doc(firestoreDB, 'posts', postId);
-    const commentsRef = collection(docRef, 'comments');
-    const snapshot = await getDocs(commentsRef);
-    console.log(snapshot.size);
+    const querySnapshot = await onSnapshot(
+      query(collection(firestoreDB, 'posts'), where('userId', '==', userId)),
+      data => {
+        // console.log("data.docs: ============>", data);
+        response = data;
+      }
+    );
 
-    payload?.onSuccess(snapshot.size);
+    payload?.onSuccess(response);
 
-    return snapshot.size;
+    return response;
   } catch (error) {
     console.log(error);
-    payload?.onError();
+    payload?.onError(error);
   }
 });
