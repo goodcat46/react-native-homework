@@ -10,14 +10,15 @@
 // };
 
 // export default MapScreen;
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, FlatList, Image } from 'react-native';
+
+import React, { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-// import { Ionicons } from "@expo/vector-icons";
 
 export default function MapScreen({ route, navigation }) {
   console.log('route:', route);
-  const { latitude, longitude } = route.params.location;
+  const location = route.params.location;
+  const { latitude = 49.411424, longitude = 26.990793 } = location;
 
   useEffect(() => {
     navigation.getParent()?.setOptions({
@@ -48,12 +49,7 @@ export default function MapScreen({ route, navigation }) {
           longitudeDelta: 0.0421,
         }}
       >
-        <Marker
-          //   key={index}
-          coordinate={{ latitude: latitude, longitude: longitude }}
-          //   title={marker.title}
-          //   description={marker.description}
-        />
+        <Marker coordinate={{ latitude, longitude }} />
       </MapView>
     </View>
   );
