@@ -1,6 +1,7 @@
 import { Feather } from '@expo/vector-icons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { colors } from '../styles';
 import { screens } from './screens/screens';
 const Post = ({ navigation, item, name, comments, likes, location, img }) => {
   return (
@@ -65,7 +66,7 @@ const s = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'tomato',
     marginBottom: 32,
-    minHeight: 300,
+    minHeight: 320,
   },
   imgBox: {
     width: '100%',
@@ -84,6 +85,8 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
   },
   name: {
+    fontSize: 16,
+    padding: 4,
     marginHorizontal: 8,
   },
   wraper: {
@@ -132,7 +135,7 @@ const s = StyleSheet.create({
     lineHeight: 19,
     textAlign: 'right',
     textDecorationLine: 'underline',
-    color: '#212121',
+    color: colors.title,
     marginLeft: 3,
   },
 });

@@ -35,7 +35,7 @@ export const authSlice = createSlice({
     },
 
     [logInUserThunk.fulfilled]: (state, { payload }) => {
-      console.log('state login action ================>>>', payload);
+      console.log('state LOGIN action ================>>>', payload);
 
       const { displayName, email, photoURL, uid } = payload;
       state.user = { displayName, email, photoURL, uid };
@@ -43,7 +43,7 @@ export const authSlice = createSlice({
     },
     [logInUserThunk.pending]: (state, { payload }) => {},
     [logInUserThunk.rejected]: (state, { payload }) => {
-      console.log('state login ERROR ============>>>>', payload);
+      console.log('state LOGIN ERROR ============>>>>', payload);
       state.error === payload;
     },
 
@@ -57,7 +57,8 @@ export const authSlice = createSlice({
     },
 
     [authStateChangedThunk.fulfilled]: (state, { payload }) => {
-      console.log('authStateChanged action ====>>>', payload);
+      console.log('auth State Changed ACTION ====>>>', payload);
+      state.user = payload?.user;
       state.stateChange = payload?.stateChange;
     },
     [authStateChangedThunk.pending]: (state, { payload }) => {},

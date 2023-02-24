@@ -19,14 +19,22 @@ const Main = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(authStateChangedThunk());
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        // console.log('userData thunk ==============>>>>>>', user);
+
+        const payload = {
+          data: { user, stateChange: true },
+          onSuccess: () => {},
+          onError: error => {},
+        };
+        // console.log(payload);
+        dispatch(authStateChangedThunk(payload));
+      }
+    });
   }, []);
 
-  console.log(stateChange);
-
   const routing = useRoute(stateChange);
-
-  useEffect(() => {}, []);
 
   return <NavigationContainer>{routing}</NavigationContainer>;
 };
