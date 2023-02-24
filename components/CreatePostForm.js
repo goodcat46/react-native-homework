@@ -40,12 +40,11 @@ const CreatePostForm = ({ navigation }) => {
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
 
-    console.log(photo);
-
     setFormDdata(prev => ({ ...prev, photo: photo.uri }));
 
     await MediaLibrary.createAssetAsync(photo.uri);
   };
+
   const uploadPhotoToServer = async () => {
     const response = await fetch(formData.photo);
     console.log('response:   -----> ', response);
@@ -72,11 +71,10 @@ const CreatePostForm = ({ navigation }) => {
     // console.log("downloadedPhoto -->", downloadedPhoto);
     return downloadedPhoto;
   };
-
   const uploadPostToServer = async () => {
     try {
       const photo = await uploadPhotoToServer();
-      console.log(photo);
+      // console.log(photo);
       const data = {
         ...formData,
         photo,
@@ -91,6 +89,7 @@ const CreatePostForm = ({ navigation }) => {
       console.error('Error adding document: ', e);
     }
   };
+
   function onSubmit() {
     uploadPostToServer();
   }
